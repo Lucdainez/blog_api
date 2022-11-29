@@ -45,7 +45,7 @@ Ao iniciar este projeto você concorda com as diretrizes do Código de Conduta e
 
   * Projeto individual.
   * Serão `3` dias de projeto.
-  * Data de entrega para avaliação final do projeto: `14/12/2022 14:00`.
+  * Data de entrega para avaliação regular do projeto: `13/12/2022 14:00`.
   * Essa data pode sofrer alteração dependendo do avanço da seleção brasileira na copa do mundo.
 
 </details>
