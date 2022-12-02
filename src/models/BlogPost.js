@@ -10,13 +10,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     title: DataTypes.STRING,
     content: DataTypes.STRING,
-    userId: DataTypes.INTEGER,
+    user_id: DataTypes.INTEGER,
     published: DataTypes.DATE,
     updated: DataTypes.DATE
   }, {
     sequelize,
     timestamps: false,
-    underscored: true,
+    underscored: false,
     // modelName: 'blog_post',
   });
 
