@@ -12,6 +12,16 @@ const insertUser = async (displayName, email, password, image) => {
   return { type: 201, message: token };
 };
 
+const getAllUsers = async () => {
+  const users = await User.findAll();
+  const usersWithoutPassword = users.map((user) => { 
+    const { password: _, ...userWithoutPassword } = user.dataValues;
+    return userWithoutPassword;
+  });
+  return usersWithoutPassword;
+};
+
 module.exports = {
   insertUser,
+  getAllUsers,
 };
