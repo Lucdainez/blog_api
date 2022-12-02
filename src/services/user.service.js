@@ -21,7 +21,17 @@ const getAllUsers = async () => {
   return usersWithoutPassword;
 };
 
+const getUserById = async (id) => {
+  const user = await User.findByPk(id);
+  if (!user) {
+    return { type: 404, message: 'User does not exist' };
+  }
+  const { password: _, ...userWithoutPassword } = user.dataValues;
+  return { type: null, message: userWithoutPassword };
+};
+
 module.exports = {
   insertUser,
   getAllUsers,
+  getUserById,
 };
