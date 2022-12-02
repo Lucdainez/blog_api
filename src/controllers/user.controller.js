@@ -9,6 +9,12 @@ const insertUser = async (req, res) => {
   return res.status(type).json({ token: message });
 };
 
+const getAllUsers = async (req, res) => {
+  const users = await userService.getAllUsers();
+  return res.status(200).json(users);
+};
+
 module.exports = {
   insertUser,
+  getAllUsers,
 };
