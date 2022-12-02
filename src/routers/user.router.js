@@ -3,6 +3,7 @@ const express = require('express');
 const displayNameValidation = require('../middlewares/displayNameValidation.middleware');
 const emailValidation = require('../middlewares/emailValidation.middleware');
 const passwordValidation = require('../middlewares/passwordValidation.middleware');
+const tokenValidation = require('../middlewares/tokenValidation.middleware');
 
 const userController = require('../controllers/user.controller');
 
@@ -13,5 +14,7 @@ router.post('/',
   emailValidation,
   passwordValidation,
   userController.insertUser);
+
+router.get('/', tokenValidation, userController.getAllUsers);
 
 module.exports = router;
