@@ -18,14 +18,27 @@ const getPostId = async (id) => {
       { model: Category, as: 'categories', through: { attributes: [] } },
     ],
   });
-
   if (!postId) {
     return { type: 404, message: 'Post does not exist' };
   }
   return { type: null, message: postId };
 };
 
+const updatePost = async (id, userId, title, content) => {
+  const postId = await BlogPost.findOne({
+    where: { id },
+  });
+  if (postId.user_id !== userId) {
+    return { type: 401, message: 'Unauthorized user' };
+  }
+  await BlogPost.update({ title, content }, { where: { id } });
+  const { message } = await getPostId(id);
+  delete message.user_id;
+  return { type: null, message };
+};
+
 module.exports = {
   getPosts,
   getPostId,
+  updatePost,
 };
