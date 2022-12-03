@@ -2,18 +2,13 @@
 
 module.exports = (sequelize, DataTypes) => {
   const postCategory = sequelize.define('PostCategory', {
-    id: {
-      allowNull: false,
-      autoIncrement: true,
-      primaryKey: true,
-      type: DataTypes.INTEGER
-    },
     post_id: DataTypes.INTEGER,
     category_id: DataTypes.INTEGER
   }, {
     sequelize,
     timestamps: false,
     underscored: false,
+    tableName: 'posts_categories',
     // modelName: 'posts_category',
   });
 
