@@ -19,7 +19,13 @@ const verifyToken = (authorization) => {
   }
 };
 
+const decodeTokenGetIdUser = (authorization) => {
+  const { data } = jwt.decode(authorization);
+  return data.id;
+};
+
 module.exports = {
   createToken,
   verifyToken,
+  decodeTokenGetIdUser,
 };
