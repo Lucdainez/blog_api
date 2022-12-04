@@ -30,8 +30,13 @@ const getUserById = async (id) => {
   return { type: null, message: userWithoutPassword };
 };
 
+const deleteMyUser = async (id) => {
+  await User.destroy({ where: { id } });
+};
+
 module.exports = {
   insertUser,
   getAllUsers,
   getUserById,
+  deleteMyUser,
 };
