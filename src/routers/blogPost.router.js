@@ -14,10 +14,18 @@ router.get('/', tokenValidation, blogPostController.getPosts);
 
 router.get('/:id', tokenValidation, blogPostController.getPostId);
 
+router.delete('/:id', tokenValidation, blogPostController.deletePost);
+
 router.put('/:id',
   tokenValidation, 
   titleValidation,
   contentValidation,
   blogPostController.updatePost);
+
+router.post('/',
+  tokenValidation, 
+  titleValidation,
+  contentValidation,
+  blogPostController.insertPost);
 
 module.exports = router;
