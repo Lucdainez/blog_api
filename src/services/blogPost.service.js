@@ -1,4 +1,4 @@
-const { BlogPost, User, Category } = require('../models');
+const { BlogPost, User, Category, PostCategory, sequelize } = require('../models');
 
 const getPosts = async () => {
   const posts = await BlogPost.findAll({
@@ -28,17 +28,66 @@ const updatePost = async (id, userId, title, content) => {
   const postId = await BlogPost.findOne({
     where: { id },
   });
-  if (postId.user_id !== userId) {
+  if (postId.userId !== userId) {
     return { type: 401, message: 'Unauthorized user' };
   }
   await BlogPost.update({ title, content }, { where: { id } });
   const { message } = await getPostId(id);
-  delete message.user_id;
   return { type: null, message };
+};
+
+const deletePost = async (id, userId) => { 
+  console.log('ENTROU DELETE POST');
+  const postId = await BlogPost.findOne({
+    where: { id },
+  });
+  console.log(postId);
+  if (postId.userId !== userId) {
+    return { type: 401, message: 'Unauthorized user' };
+  }
+  await BlogPost.destroy({ where: { id } });
+  return { type: null };
+};
+
+const transactionSequelizeCreatePost = async ({ title, content, categoryIds, userId }) => {
+  const result = await sequelize.transaction(async (t) => {
+    const newPost = await BlogPost.create(
+      { title, content, userId, updated: Date.now(), published: Date.now() },
+      {
+        transaction: t,
+      },
+    );  
+    return newPost;
+  });
+  const { id } = result.dataValues;
+  await Promise.all(categoryIds.map(async (idC) => {
+    await PostCategory.create({
+      postId: id,
+      categoryId: idC,
+    });
+  }));
+
+  return result;
+};
+
+const insertPost = async ({ title, content, categoryIds, userId }) => {
+  const categoriesVerify = await Promise.all(categoryIds.map(async (id) => {
+    const categories = await Category.findOne({
+      where: { id },
+    });
+    return categories;
+  }));
+  if (categoriesVerify.includes(null)) {
+    return { type: 400, message: 'one or more "categoryIds" not found' };
+  }
+  const result = await transactionSequelizeCreatePost({ title, content, categoryIds, userId });
+  return { type: null, message: result };
 };
 
 module.exports = {
   getPosts,
   getPostId,
   updatePost,
+  deletePost,
+  insertPost,
 };
