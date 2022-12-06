@@ -12,6 +12,8 @@ const router = express.Router();
 
 router.get('/', tokenValidation, blogPostController.getPosts);
 
+router.get('/search', tokenValidation, blogPostController.getSearch);
+
 router.get('/:id', tokenValidation, blogPostController.getPostId);
 
 router.delete('/:id', tokenValidation, blogPostController.deletePost);
