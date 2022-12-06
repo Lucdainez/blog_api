@@ -1,4 +1,6 @@
-const { BlogPost, User, Category, PostCategory, sequelize } = require('../models');
+const { BlogPost, User, Category, PostCategory, sequelize, Sequelize } = require('../models');
+
+const { Op } = Sequelize;
 
 const getPosts = async () => {
   const posts = await BlogPost.findAll({
@@ -37,11 +39,9 @@ const updatePost = async (id, userId, title, content) => {
 };
 
 const deletePost = async (id, userId) => { 
-  console.log('ENTROU DELETE POST');
   const postId = await BlogPost.findOne({
     where: { id },
   });
-  console.log(postId);
   if (postId.userId !== userId) {
     return { type: 401, message: 'Unauthorized user' };
   }
@@ -84,10 +84,27 @@ const insertPost = async ({ title, content, categoryIds, userId }) => {
   return { type: null, message: result };
 };
 
+const getSearch = async (q) => {
+  const posts = await BlogPost.findAll({
+    where: {
+      [Op.or]: {
+        title: { [Op.like]: `%${q}%` },
+        content: { [Op.like]: `%${q}%` },
+      },
+    },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } }, 
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+  return posts;
+};
+
 module.exports = {
   getPosts,
   getPostId,
   updatePost,
   deletePost,
   insertPost,
+  getSearch,
 };
