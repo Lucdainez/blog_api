@@ -47,7 +47,6 @@ const insertPost = async (req, res) => {
   const { title, content, categoryIds } = req.body;
   const { authorization } = req.headers;
   const userId = jwtFunctions.decodeTokenGetIdUser(authorization);
-  console.log(userId);
   const { type, message } = await blogPostService
     .insertPost({ title, content, categoryIds, userId });
   if (type) {
@@ -56,10 +55,17 @@ const insertPost = async (req, res) => {
   return res.status(201).json(message);
 };
 
+const getSearch = async (req, res) => {
+  const { q } = req.query;
+  const result = await blogPostService.getSearch(q);
+  return res.status(200).json(result);
+};
+
 module.exports = {
   getPosts,
   getPostId,
   updatePost,
   deletePost,
   insertPost,
+  getSearch,
 };
